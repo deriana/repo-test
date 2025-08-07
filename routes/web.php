@@ -27,7 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('attendances', AttendanceController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('sekolah', SekolahController::class);
-Route::resource('letter-status', LetterStatusController::class);
+    Route::resource('classification', \App\Http\Controllers\ClassificationController::class);
+    Route::resource('letter-status', LetterStatusController::class);
 });
 
 // Registrasi
@@ -54,4 +55,3 @@ Route::get('/profile', [CompanyController::class, 'show'])->name('company.show')
 Route::get('/profile/edit', [CompanyController::class, 'edit'])->name('company.edit');
 Route::post('/profile/update', [CompanyController::class, 'update'])->name('company.update');
 Route::get('/get-jurusan-by-sekolah/{id}', [App\Http\Controllers\UserController::class, 'getJurusanBySekolah']);
-
