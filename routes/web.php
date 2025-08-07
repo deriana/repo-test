@@ -7,6 +7,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LetterStatusController;
 use App\Http\Controllers\RekapAbsenController;
 use App\Http\Controllers\SekolahController;
 
@@ -26,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('attendances', AttendanceController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('sekolah', SekolahController::class);
+Route::resource('letter-status', LetterStatusController::class);
 });
 
 // Registrasi
