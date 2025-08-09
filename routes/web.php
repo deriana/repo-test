@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttachmentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
@@ -29,6 +30,18 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('sekolah', SekolahController::class);
     Route::resource('classification', \App\Http\Controllers\ClassificationController::class);
     Route::resource('letter-status', LetterStatusController::class);
+    Route::prefix('transaction')->as('transaction.')->group(function () {
+        Route::resource('incoming', \App\Http\Controllers\IncomingLetterController::class);
+        Route::resource('outgoing', \App\Http\Controllers\OutgoingLetterController::class);
+        Route::resource('{letter}/disposition', \App\Http\Controllers\DispositionController::class)->except(['show']);
+    });
+    Route::prefix('agenda')->as('agenda.')->group(function () {
+        Route::get('incoming', [\App\Http\Controllers\IncomingLetterController::class, 'agenda'])->name('incoming');
+        Route::get('incoming/print', [\App\Http\Controllers\IncomingLetterController::class, 'print'])->name('incoming.print');
+        Route::get('outgoing', [\App\Http\Controllers\OutgoingLetterController::class, 'agenda'])->name('outgoing');
+        Route::get('outgoing/print', [\App\Http\Controllers\OutgoingLetterController::class, 'print'])->name('outgoing.print');
+    });
+    Route::delete('/attachments/{id}', [AttachmentController::class, 'destroy'])->name('attachments.destroy');
 });
 
 // Registrasi
