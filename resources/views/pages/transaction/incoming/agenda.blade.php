@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Users')
+@section('title', 'Agenda Surat')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -11,14 +11,11 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Users</h1>
-                <div class="section-header-button">
-                    <a href="{{ route('users.create') }}" class="btn btn-primary">Add New</a>
-                </div>
+                <h1>Agenda Surat</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a href="#">Users</a></div>
-                    <div class="breadcrumb-item">All Users</div>
+                    <div class="breadcrumb-item"><a href="#">Transaksi</a></div>
+                    <div class="breadcrumb-item">Agenda Surat</div>
                 </div>
             </div>
             <div class="section-body">
@@ -27,86 +24,60 @@
                         @include('layouts.alert')
                     </div>
                 </div>
-                <h2 class="section-title">Users</h2>
+
+                <h2 class="section-title">Daftar Surat</h2>
                 <p class="section-lead">
-                    You can manage all Users, such as editing, deleting and more.
+                    Anda dapat melihat dan mengelola semua surat yang terdaftar di agenda.
                 </p>
 
+                <div class="row mt-4 mb-3">
+                    <div class="col-md-8">
+                        <form method="GET" action="{{ url()->current() }}" class="form-inline d-flex align-items-center">
+                            <label for="tanggal_a" class="me-2 mb-0 mr-2">Tanggal dari:</label>
+                            <input type="date" id="tanggal_a" name="tanggal_a" value="{{ request('tanggal_a') }}"
+                                class="form-control me-3">
 
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>All Posts</h4>
-                            </div>
-                            <div class="card-body">
+                            <label for="tanggal_b" class="me-2 mb-0 ml-2 mr-2">Sampai:</label>
+                            <input type="date" id="tanggal_b" name="tanggal_b" value="{{ request('tanggal_b') }}"
+                                class="form-control me-3">
 
-                                <div class="float-right">
-                                    <form method="GET" action="{{ route('users.index') }}">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Search" name="name">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <div class="clearfix mb-3"></div>
-
-                                <div class="table-responsive">
-                                    <table class="table-striped table">
-                                        <tr>
-                                            <th>Image</th> <!-- Tambahan kolom gambar -->
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Created At</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        @foreach ($users as $user)
-                                            <tr>
-                                                <td>
-                                                    @if ($user->image_url)
-                                                        <img src="{{ asset('storage/' . $user->image_url) }}"
-                                                            alt="User Image" width="50" height="50"
-                                                            style="object-fit: cover; border-radius: 5px;">
-                                                    @else
-                                                        <span class="text-muted">No image</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $user->name }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                <td>{{ $user->created_at }}</td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        <a href='{{ route('users.edit', $user->id) }}'
-                                                            class="btn btn-sm btn-info btn-icon">
-                                                            <i class="fas fa-edit"></i> Edit
-                                                        </a>
-
-                                                        <form action="{{ route('users.destroy', $user->id) }}"
-                                                            method="POST" class="ml-2"
-                                                            onsubmit="return confirm('Yakin ingin menghapus user ini?');">
-                                                            @method('DELETE')
-                                                            @csrf
-                                                            <button class="btn btn-sm btn-danger btn-icon">
-                                                                <i class="fas fa-times"></i> Delete
-                                                            </button>
-                                                        </form>
-
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </table>
-
-                                </div>
-                                <div class="float-right">
-                                    {{ $users->withQueryString()->links() }}
-                                </div>
-                            </div>
-                        </div>
+                            <button type="submit" class="btn btn-primary me-3 ml-2 mr-2">Filter</button>
+                            <a href="{{ route('agenda.incoming.print', ['tanggal_a' => request('tanggal_a'), 'tanggal_b' => request('tanggal_b')]) }}"
+                                target="_blank" class="btn btn-secondary">
+                                Print
+                            </a>
+                        </form>
                     </div>
+                </div>
+
+                <div class="table-responsive" id="table-to-print">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nomor Surat</th>
+                                <th>Nomor Agenda</th>
+                                <th>Pengirim</th>
+                                <th>Tanggal Surat</th>
+                                <th>Klasifikasi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($letters as $letter)
+                                <tr>
+                                    <td>{{ $letter->reference_number }}</td>
+                                    <td>{{ $letter->agenda_number }}</td>
+                                    <td>{{ $letter->from }}</td>
+                                    <td>{{ $letter->letter_date ? \Carbon\Carbon::parse($letter->letter_date)->format('d/m/Y') : '-' }}
+                                    </td>
+                                    <td>{{ $letter->classification_code ?? '-' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Tidak ada surat ditemukan.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -114,9 +85,6 @@
 @endsection
 
 @push('scripts')
-    <!-- JS Libraies -->
+    <!-- JS Libraries -->
     <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-
-    <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/features-posts.js') }}"></script>
 @endpush

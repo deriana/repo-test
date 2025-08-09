@@ -8,98 +8,166 @@
 @endpush
 
 @section('main')
-<div class="main-content">
-    <section class="section">
-        <div class="section-header">
-            <h1>Dashboard</h1>
-        </div>
+    <div class="main-content">
+        <section class="section">
+            <div class="section-header">
+                <h1>Dashboard</h1>
+            </div>
 
-        <div class="row">
-            {{-- Total User --}}
-            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-primary">
-                        <i class="far fa-user"></i>
+            <div class="row">
+                {{-- Total User --}}
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="far fa-user"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Total User</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $totalUser }}
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-wrap">
+                </div>
+
+                {{-- Kehadiran Hari Ini --}}
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-success">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Kehadiran Hari Ini</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $totalHariIni }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Total Terlambat --}}
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-danger">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>User Sering Telat</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $seringTelat->sum('total_telat') }} kali
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Total Disiplin --}}
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-warning">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>User Disiplin</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $tepatWaktu->sum('total_tepat') }} kali
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {{-- Surat Masuk Hari Ini --}}
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-info">
+                            <i class="fas fa-inbox"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Surat Masuk Hari Ini</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $todayIncomingLetter }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Surat Keluar Hari Ini --}}
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-warning">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Surat Keluar Hari Ini</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $todayOutgoingLetter }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Surat Disposisi Hari Ini --}}
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-secondary">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Surat Disposisi Hari Ini</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $todayDispositionLetter }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            {{-- Diagram Kehadiran Total --}}
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
                         <div class="card-header">
-                            <h4>Total User</h4>
+                            <h4>Statistik Kehadiran (Keseluruhan)</h4>
                         </div>
                         <div class="card-body">
-                            {{ $totalUser }}
+                            <canvas id="kehadiranChart" height="100"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Kehadiran Hari Ini --}}
-            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-success">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <div class="card-wrap">
+            {{-- Grafik Transaksi Surat Hari Ini --}}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
                         <div class="card-header">
-                            <h4>Kehadiran Hari Ini</h4>
+                            <h4>Statistik Transaksi Surat Hari Ini</h4>
                         </div>
                         <div class="card-body">
-                            {{ $totalHariIni }}
+                            <canvas id="suratChart" height="100"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Total Terlambat --}}
-            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-danger">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>User Sering Telat</h4>
-                        </div>
-                        <div class="card-body">
-                            {{ $seringTelat->sum('total_telat') }} kali
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Total Disiplin --}}
-            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-warning">
-                        <i class="fas fa-user-check"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>User Disiplin</h4>
-                        </div>
-                        <div class="card-body">
-                            {{ $tepatWaktu->sum('total_tepat') }} kali
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Diagram Kehadiran Total --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Statistik Kehadiran (Keseluruhan)</h4>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="kehadiranChart" height="100"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </section>
-</div>
+        </section>
+    </div>
 @endsection
 
 @push('scripts')
@@ -164,6 +232,47 @@
                         ticks: {
                             stepSize: 1,
                             color: '#777'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        const suratChartCtx = document.getElementById('suratChart').getContext('2d');
+
+        const suratChart = new Chart(suratChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Surat Masuk', 'Surat Keluar', 'Surat Disposisi'],
+                datasets: [{
+                    label: 'Jumlah Surat Hari Ini',
+                    data: [
+                        {{ $todayIncomingLetter }},
+                        {{ $todayOutgoingLetter }},
+                        {{ $todayDispositionLetter }}
+                    ],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.7)', // biru
+                        'rgba(255, 206, 86, 0.7)', // kuning
+                        'rgba(153, 102, 255, 0.7)' // ungu
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
                         }
                     }
                 }

@@ -35,10 +35,43 @@ class IncomingLetterController extends Controller
      * @param Request $request
      * @return View
      */
-    public function agenda()
+    public function agenda(Request $request)
     {
-        $letters = Letter::where('type', LetterType::INCOMING->type())->get();
-        return view('transaction.incoming.agenda', compact('letters'));
+        $query = Letter::where('type', LetterType::INCOMING->type());
+
+        if ($request->filled('tanggal_a')) {
+            $query->whereDate('letter_date', '>=', $request->tanggal_a);
+        }
+        if ($request->filled('tanggal_b')) {
+            $query->whereDate('letter_date', '<=', $request->tanggal_b);
+        }
+
+        $letters = $query->get();
+
+        return view('pages.transaction.incoming.agenda', compact('letters'));
+    }
+
+    public function print(Request $request): View
+    {
+        $title = "Agenda Surat Masuk";
+
+        $query = Letter::where('type', LetterType::INCOMING->type());
+
+        if ($request->filled('tanggal_a')) {
+            $query->whereDate('letter_date', '>=', $request->tanggal_a);
+        }
+        if ($request->filled('tanggal_b')) {
+            $query->whereDate('letter_date', '<=', $request->tanggal_b);
+        }
+
+        $letters = $query->get();
+
+        return view('pages.transaction.incoming.print', [
+            'data' => $letters,
+            'since' => $request->tanggal_a,
+            'until' => $request->tanggal_b,
+            'title' => $title,
+        ]);
     }
 
 

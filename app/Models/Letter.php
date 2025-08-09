@@ -78,4 +78,46 @@ class Letter extends Model
     {
         return $this->hasMany(Attachment::class, 'letter_id', 'id');
     }
+
+    public static function getIncomingTodayCount()
+    {
+        return self::where('type', 'incoming')
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+    }
+
+    public static function getOutgoingTodayCount()
+    {
+        return self::where('type', 'outgoing')
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+    }
+
+    public static function getIncomingYesterdayCount()
+    {
+        return self::where('type', 'incoming')
+            ->whereDate('created_at', now()->subDay()->toDateString())
+            ->count();
+    }
+
+    public static function getOutgoingYesterdayCount()
+    {
+        return self::where('type', 'outgoing')
+            ->whereDate('created_at', now()->subDay()->toDateString())
+            ->count();
+    }
+
+    public static function countIncomingByDate(string $date): int
+    {
+        return self::where('type', 'incoming')
+            ->whereDate('created_at', $date)
+            ->count();
+    }
+
+    public static function countOutgoingByDate(string $date): int
+    {
+        return self::where('type', 'outgoing')
+            ->whereDate('created_at', $date)
+            ->count();
+    }
 }
