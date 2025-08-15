@@ -1,3 +1,13 @@
+<style>
+    .nav-header {
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+        padding-left: 1rem;
+        color: #6c757d;
+        text-transform: uppercase;
+    }
+</style>
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
@@ -14,13 +24,14 @@
             </li>
 
             @if (auth()->user() && auth()->user()->role == 'admin')
-                <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                    <a href="{{ route('users.index') }}" class="nav-link"><i
-                            class="fas fa-users"></i><span>Users</span></a>
+                <li class="nav-header">SURAT</li>
+                <li class="nav-item {{ request()->routeIs('transaction.incoming.*') ? 'active' : '' }}">
+                    <a href="{{ route('transaction.incoming.index') }}" class="nav-link"><i
+                            class="fas fa-inbox"></i><span>Surat Masuk</span></a>
                 </li>
-                <li class="nav-item {{ request()->routeIs('sekolah.*') ? 'active' : '' }}">
-                    <a href="{{ route('sekolah.index') }}" class="nav-link"><i
-                            class="fas fa-school"></i><span>Sekolah</span></a>
+                <li class="nav-item {{ request()->routeIs('transaction.outgoing.*') ? 'active' : '' }}">
+                    <a href="{{ route('transaction.outgoing.index') }}" class="nav-link"><i
+                            class="fas fa-paper-plane"></i><span>Surat Keluar</span></a>
                 </li>
                 <li class="nav-item {{ request()->routeIs('classification.*') ? 'active' : '' }}">
                     <a href="{{ route('classification.index') }}" class="nav-link"><i
@@ -30,14 +41,6 @@
                     <a href="{{ route('letter-status.index') }}" class="nav-link"><i
                             class="fas fa-envelope-open-text"></i><span>Status Surat</span></a>
                 </li>
-                <li class="nav-item {{ request()->routeIs('transaction.incoming.*') ? 'active' : '' }}">
-                    <a href="{{ route('transaction.incoming.index') }}" class="nav-link"><i
-                            class="fas fa-inbox"></i><span>Surat Masuk</span></a>
-                </li>
-                <li class="nav-item {{ request()->routeIs('transaction.outgoing.*') ? 'active' : '' }}">
-                    <a href="{{ route('transaction.outgoing.index') }}" class="nav-link"><i
-                            class="fas fa-paper-plane"></i><span>Surat Keluar</span></a>
-                </li>
                 <li class="nav-item {{ request()->routeIs('agenda.incoming') ? 'active' : '' }}">
                     <a href="{{ route('agenda.incoming') }}" class="nav-link"><i
                             class="fas fa-folder-open"></i><span>Agenda Surat Masuk</span></a>
@@ -46,13 +49,21 @@
                     <a href="{{ route('agenda.outgoing') }}" class="nav-link"><i class="fas fa-share"></i><span>Agenda
                             Surat Keluar</span></a>
                 </li>
+
+                <li class="nav-header">ADMINISTRASI</li>
+                <li class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                    <a href="{{ route('users.index') }}" class="nav-link"><i
+                            class="fas fa-users"></i><span>Users</span></a>
+                </li>
             @endif
 
+            <li class="nav-header">PERUSAHAAN</li>
             <li class="nav-item {{ request()->routeIs('companies.show') ? 'active' : '' }}">
                 <a href="{{ route('companies.show', 1) }}" class="nav-link"><i
                         class="fas fa-building"></i><span>Company</span></a>
             </li>
 
+            <li class="nav-header">ABSENSI</li>
             <li class="nav-item {{ request()->routeIs('attendances.*') ? 'active' : '' }}">
                 <a href="{{ route('attendances.index') }}" class="nav-link"><i
                         class="fas fa-check"></i><span>Absensi</span></a>
@@ -68,6 +79,7 @@
                             class="fas fa-columns"></i><span>Ijin</span></a>
                 </li>
             @endif
+
 
 
     </aside>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,8 +30,13 @@ class AttendanceController extends Controller
             ->get();
 
         $attendances = $query->paginate(10);
+        $permissions = Permission::where('user_id', auth()->id())
+            ->where('date_permission', now()->toDateString())
+            ->get();
 
-        return view('pages.absensi.index', compact('attendances', 'user'));
+            // dd($permissions);
+
+        return view('pages.absensi.index', compact('attendances', 'user', 'permissions'));
     }
 
     public function store(Request $request)

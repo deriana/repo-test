@@ -138,10 +138,12 @@ class RekapAbsenController extends Controller
             return redirect()->route('home')->with('error', 'Kamu sudah mengajukan izin untuk hari ini.');
         }
 
-        $request->validate([
+        $data = $request->validate([
             'reason' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        // dd($data);
 
         $imagePath = null;
         if ($request->hasFile('image')) {
@@ -151,7 +153,7 @@ class RekapAbsenController extends Controller
         Permission::create([
             'user_id' => $userId,
             'date_permission' => $today,
-            'reason' => $request->alasan,
+            'reason' => $request->reason,
             'image' => $imagePath,
             'is_approved' => false,
         ]);

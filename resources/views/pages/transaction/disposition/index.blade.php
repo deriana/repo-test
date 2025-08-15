@@ -38,7 +38,7 @@
                                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                                         <div>
                                             <h5 class="fw-bold mb-0">{{ $disposition->to }}</h5>
-                                            <small class="text-muted">Status: {{ $disposition->status?->type ?? '-' }}</small>
+                                            <small class="text-muted">Status: {{ $disposition->status?->status ?? '-' }}</small>
                                         </div>
                                         <div class="text-end">
                                             <small class="text-secondary">Jatuh Tempo:</small><br>

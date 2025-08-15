@@ -93,49 +93,65 @@
                                 <div class="d-flex justify-content-between flex-wrap mb-3">
                                     <div>
                                         @php
-                                            $sudahAbsenMasuk = $attendances
-                                                ->where('date', now()->toDateString())
-                                                ->where('user_id', auth()->id())
-                                                ->isNotEmpty();
-                                            $absenHariIni = $attendances
-                                                ->where('date', now()->toDateString())
-                                                ->where('user_id', auth()->id())
-                                                ->first();
-                                            $sudahAbsenKeluar = $absenHariIni && $absenHariIni->time_out !== null;
-                                        @endphp
+    $today = now()->toDateString();
+    $userId = auth()->id();
 
-                                        @if (auth()->user()->role == 'admin')
-                                            <button class="btn btn-sm btn-primary mr-2" data-toggle="modal"
-                                                data-target="#absenModalAdmin" data-backdrop="false">
-                                                <i class="fas fa-sign-in-alt mr-1"></i> Absen Masuk Admin
-                                            </button>
-                                        @else
-                                            @if (!$sudahAbsenMasuk)
-                                                <button class="btn btn-sm btn-primary mr-2" data-toggle="modal"
-                                                    data-target="#absenModal" data-backdrop="false">
-                                                    <i class="fas fa-sign-in-alt mr-1"></i> Absen Masuk Users
-                                                </button>
-                                            @else
-                                                <button class="btn btn-sm btn-secondary mr-2" disabled>
-                                                    Sudah absen hari ini
-                                                </button>
-                                            @endif
+    $sudahAbsenMasuk = $attendances
+        ->where('date', $today)
+        ->where('user_id', $userId)
+        ->isNotEmpty();
 
-                                            @if ($sudahAbsenMasuk && !$sudahAbsenKeluar)
-                                                <a href="{{ route('attendances.edit', $absenHariIni->id) }}"
-                                                    class="btn btn-sm btn-success">
-                                                    <i class="fas fa-sign-out-alt mr-1"></i> Absen Keluar
-                                                </a>
-                                            @elseif ($sudahAbsenMasuk && $sudahAbsenKeluar)
-                                                <button class="btn btn-sm btn-secondary" disabled>
-                                                    Sudah absen keluar hari ini
-                                                </button>
-                                            @endif
+    $absenHariIni = $attendances
+        ->where('date', $today)
+        ->where('user_id', $userId)
+        ->first();
 
-                                            <a href="{{ route('rekap.create') }}" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-envelope-open-text mr-1"></i> Ajukan Izin
-                                            </a>
-                                        @endif
+    $sudahAbsenKeluar = $absenHariIni && $absenHariIni->time_out !== null;
+
+    $sudahIzinHariIni = $permissions->isNotEmpty(); // karena sudah filter berdasarkan user dan tanggal
+@endphp
+
+@if(auth()->user()->role == 'admin')
+    <button class="btn btn-sm btn-primary mr-2" data-toggle="modal"
+        data-target="#absenModalAdmin" data-backdrop="false">
+        <i class="fas fa-sign-in-alt mr-1"></i> Absen Masuk Admin
+    </button>
+@else
+    @if($sudahIzinHariIni)
+        <button class="btn btn-sm btn-secondary mr-2" disabled>
+            Anda sudah mengajukan izin hari ini, tidak bisa absen.
+        </button>
+    @elseif($sudahAbsenMasuk)
+        <button class="btn btn-sm btn-secondary mr-2" disabled>
+            Sudah absen masuk hari ini
+        </button>
+
+        @if(!$sudahAbsenKeluar)
+            <a href="{{ route('attendances.edit', $absenHariIni->id) }}"
+                class="btn btn-sm btn-success">
+                <i class="fas fa-sign-out-alt mr-1"></i> Absen Keluar
+            </a>
+        @else
+            <button class="btn btn-sm btn-secondary" disabled>
+                Sudah absen keluar hari ini
+            </button>
+        @endif
+
+        <button class="btn btn-sm btn-secondary ml-2" disabled>
+            Tidak bisa ajukan izin, sudah absen hari ini
+        </button>
+    @else
+        <button class="btn btn-sm btn-primary mr-2" data-toggle="modal"
+            data-target="#absenModal" data-backdrop="false">
+            <i class="fas fa-sign-in-alt mr-1"></i> Absen Masuk Users
+        </button>
+
+        <a href="{{ route('rekap.create') }}" class="btn btn-sm btn-warning">
+            <i class="fas fa-envelope-open-text mr-1"></i> Ajukan Izin
+        </a>
+    @endif
+@endif
+
 
                                     </div>
 
