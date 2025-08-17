@@ -13,11 +13,7 @@ class Attendance extends Model
     'date',
     'time_in',
     'time_out',
-    // 'latlon_in',
-    // 'latlon_out',
     'user_id',
-    'school_name',
-    'jurusan',
 ];
 
     public function user()

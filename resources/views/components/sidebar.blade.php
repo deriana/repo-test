@@ -78,10 +78,10 @@
                     <a href="{{ route('rekap.index') }}" class="nav-link"><i class="fas fa-columns"></i><span>Rekap
                             Absensi</span></a>
                 </li>
-                <li class="nav-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
+                {{-- <li class="nav-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
                     <a href="{{ route('permissions.index') }}" class="nav-link"><i
                             class="fas fa-columns"></i><span>Ijin</span></a>
-                </li>
+                </li> --}}
             @endif
 
 

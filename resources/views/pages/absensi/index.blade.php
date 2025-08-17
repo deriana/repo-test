@@ -93,66 +93,67 @@
                                 <div class="d-flex justify-content-between flex-wrap mb-3">
                                     <div>
                                         @php
-    $today = now()->toDateString();
-    $userId = auth()->id();
+                                            $today = now()->toDateString();
+                                            $userId = auth()->id();
 
-    $sudahAbsenMasuk = $attendances
-        ->where('date', $today)
-        ->where('user_id', $userId)
-        ->isNotEmpty();
+                                            $sudahAbsenMasuk = $attendances
+                                                ->where('date', $today)
+                                                ->where('user_id', $userId)
+                                                ->isNotEmpty();
 
-    $absenHariIni = $attendances
-        ->where('date', $today)
-        ->where('user_id', $userId)
-        ->first();
+                                            $absenHariIni = $attendances
+                                                ->where('date', $today)
+                                                ->where('user_id', $userId)
+                                                ->first();
 
-    $sudahAbsenKeluar = $absenHariIni && $absenHariIni->time_out !== null;
+                                            $sudahAbsenKeluar = $absenHariIni && $absenHariIni->time_out !== null;
 
-    $sudahIzinHariIni = $permissions->isNotEmpty(); // karena sudah filter berdasarkan user dan tanggal
-@endphp
+                                            // $sudahIzinHariIni = $permissions->isNotEmpty(); // karena sudah filter berdasarkan user dan tanggal
 
-@if(auth()->user()->role == 'admin')
-    <button class="btn btn-sm btn-primary mr-2" data-toggle="modal"
-        data-target="#absenModalAdmin" data-backdrop="false">
-        <i class="fas fa-sign-in-alt mr-1"></i> Absen Masuk Admin
-    </button>
-@else
-    @if($sudahIzinHariIni)
-        <button class="btn btn-sm btn-secondary mr-2" disabled>
-            Anda sudah mengajukan izin hari ini, tidak bisa absen.
-        </button>
-    @elseif($sudahAbsenMasuk)
-        <button class="btn btn-sm btn-secondary mr-2" disabled>
-            Sudah absen masuk hari ini
-        </button>
+                                        @endphp
 
-        @if(!$sudahAbsenKeluar)
-            <a href="{{ route('attendances.edit', $absenHariIni->id) }}"
-                class="btn btn-sm btn-success">
-                <i class="fas fa-sign-out-alt mr-1"></i> Absen Keluar
-            </a>
-        @else
-            <button class="btn btn-sm btn-secondary" disabled>
-                Sudah absen keluar hari ini
-            </button>
-        @endif
+                                        @if (auth()->user()->role == 'admin')
+                                            <button class="btn btn-sm btn-primary mr-2" data-toggle="modal"
+                                                data-target="#absenModalAdmin" data-backdrop="false">
+                                                <i class="fas fa-sign-in-alt mr-1"></i> Absen Masuk Admin
+                                            </button>
+                                        @else
+                                            {{-- @if ($sudahIzinHariIni)
+                                    <button class="btn btn-sm btn-secondary mr-2" disabled>
+                                        Anda sudah mengajukan izin hari ini, tidak bisa absen.
+                                    </button>
+                                @elseif --}}
 
-        <button class="btn btn-sm btn-secondary ml-2" disabled>
-            Tidak bisa ajukan izin, sudah absen hari ini
-        </button>
-    @else
-        <button class="btn btn-sm btn-primary mr-2" data-toggle="modal"
-            data-target="#absenModal" data-backdrop="false">
-            <i class="fas fa-sign-in-alt mr-1"></i> Absen Masuk Users
-        </button>
+                                            @if ($sudahAbsenMasuk)
+                                                <button class="btn btn-sm btn-secondary mr-2" disabled>
+                                                    Sudah absen masuk hari ini
+                                                </button>
 
-        <a href="{{ route('rekap.create') }}" class="btn btn-sm btn-warning">
-            <i class="fas fa-envelope-open-text mr-1"></i> Ajukan Izin
-        </a>
-    @endif
-@endif
+                                                @if (!$sudahAbsenKeluar)
+                                                    <a href="{{ route('attendances.edit', $absenHariIni->id) }}"
+                                                        class="btn btn-sm btn-success">
+                                                        <i class="fas fa-sign-out-alt mr-1"></i> Absen Keluar
+                                                    </a>
+                                                @else
+                                                    <button class="btn btn-sm btn-secondary" disabled>
+                                                        Sudah absen keluar hari ini
+                                                    </button>
+                                                @endif
 
+                                                {{-- <button class="btn btn-sm btn-secondary ml-2" disabled>
+                                        Tidak bisa ajukan izin, sudah absen hari ini
+                                    </button> --}}
+                                            @else
+                                                <button class="btn btn-sm btn-primary mr-2" data-toggle="modal"
+                                                    data-target="#absenModal" data-backdrop="false">
+                                                    <i class="fas fa-sign-in-alt mr-1"></i> Absen Masuk Users
+                                                </button>
 
+                                                {{-- <a href="{{ route('rekap.create') }}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-envelope-open-text mr-1"></i> Ajukan Izin
+                                    </a> --}}
+                                            @endif
+                                        @endif
                                     </div>
 
                                     {{-- Search --}}
@@ -184,7 +185,7 @@
                                             <th>Time In</th>
                                             <th>Time Out</th>
                                             {{-- <th>Latlong In</th>
-                                            <th>Latlong Out</th> --}}
+                                <th>Latlong Out</th> --}}
                                             @if (auth()->user()->role === 'admin')
                                                 <th>Aksi</th>
                                             @endif
@@ -200,7 +201,7 @@
                                                 <td>{{ $attendance->time_in }}</td>
                                                 <td>{{ $attendance->time_out ?? '-' }}</td>
                                                 {{-- <td>{{ $attendance->latlon_in }}</td>
-                                                <td>{{ $attendance->latlon_out ?? '-' }}</td> --}}
+                                    <td>{{ $attendance->latlon_out ?? '-' }}</td> --}}
                                                 @if (auth()->user()->role === 'admin')
                                                     <td class="text-nowrap">
                                                         @if (auth()->user() && auth()->user()->role == 'admin')
@@ -221,13 +222,11 @@
                                                                 </button>
                                                             </form>
                                                         @endif
-
                                                     </td>
                                                 @endif
                                             </tr>
                                         @endforeach
                                     </tbody>
-
                                 </table>
                             </div>
 
@@ -238,6 +237,7 @@
                     </div>
                 </div>
             </div>
+
 
             {{-- Modal Absen Masuk --}}
             <div class="modal fade" id="absenModalAdmin" tabindex="-1" role="dialog"

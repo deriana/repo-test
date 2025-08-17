@@ -46,8 +46,6 @@ class AttendanceController extends Controller
             'date' => 'required|date',
             'time_in' => 'required',
             'time_out' => 'nullable',
-            'school_name' => 'nullable|string|max:255',
-            'jurusan' => 'nullable|string|max:255',
         ]);
 
         Attendance::create([
@@ -55,8 +53,6 @@ class AttendanceController extends Controller
             'date' => $request->date,
             'time_in' => $request->time_in,
             'time_out' => $request->time_out,
-            'school_name' => $request->school_name,
-            'jurusan' => $request->jurusan,
         ]);
 
         return redirect()->route('attendances.index')->with('success', 'Absensi berhasil ditambahkan.');
@@ -81,8 +77,6 @@ class AttendanceController extends Controller
             'date' => 'required|date',
             'time_in' => 'required',
             'time_out' => 'nullable',
-            'school_name' => 'nullable|string|max:255',
-            'jurusan' => 'nullable|string|max:255',
         ]);
 
         $attendance = Attendance::findOrFail($id);
@@ -92,8 +86,6 @@ class AttendanceController extends Controller
             'date' => $request->date,
             'time_in' => $request->time_in,
             'time_out' => $request->time_out,
-            'school_name' => $request->school_name,
-            'jurusan' => $request->jurusan,
         ]);
 
         return redirect()->route('attendances.index')->with('success', 'Data absensi berhasil diperbarui.');
