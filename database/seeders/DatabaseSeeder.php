@@ -15,6 +15,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        Sekolah::factory(3)->create()->each(function ($sekolah) {
+            $sekolah->jurusan()->createMany([
+                ['nama' => 'Teknik Informatika'],
+                ['nama' => 'Akuntansi'],
+                ['nama' => 'Teknik Mesin'],
+            ]);
+        });
+
         User::factory(10)->create();
 
         User::factory()->create([
@@ -41,14 +50,6 @@ class DatabaseSeeder extends Seeder
             'time_in' => '08:00',
             'time_out' => '17:00',
         ]);
-
-        Sekolah::factory(3)->create()->each(function ($sekolah) {
-            $sekolah->jurusan()->createMany([
-                ['nama' => 'Teknik Informatika'],
-                ['nama' => 'Akuntansi'],
-                ['nama' => 'Teknik Mesin'],
-            ]);
-        });
 
 
         $this->call([
