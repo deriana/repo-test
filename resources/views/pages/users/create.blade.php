@@ -81,8 +81,7 @@
                                 </div>
                             </div>
 
-                            {{-- Sekolah --}}
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="sekolah_id">Sekolah</label>
                                 <select name="sekolah_id" id="sekolah_id"
                                     class="form-control select2 @error('sekolah_id') is-invalid @enderror" required>
@@ -99,15 +98,33 @@
                                 @enderror
                             </div>
 
-                            {{-- Jurusan --}}
                             <div class="form-group">
                                 <label for="jurusan_id">Jurusan</label>
                                 <select name="jurusan_id" id="jurusan_id"
                                     class="form-control select2 @error('jurusan_id') is-invalid @enderror" required>
                                     <option value="">Pilih Jurusan</option>
-                                    {{-- Akan diisi otomatis lewat AJAX --}}
                                 </select>
                                 @error('jurusan_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div> --}}
+
+                            {{-- Sekolah --}}
+                            <div class="form-group">
+                                <label for="sekolah">Sekolah</label>
+                                <input type="text" name="sekolah" id="sekolah" value="{{ old('sekolah') }}"
+                                    class="form-control @error('sekolah') is-invalid @enderror" required>
+                                @error('sekolah')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- Jurusan --}}
+                            <div class="form-group">
+                                <label for="jurusan">Jurusan</label>
+                                <input type="text" name="jurusan" id="jurusan" value="{{ old('jurusan') }}"
+                                    class="form-control @error('jurusan') is-invalid @enderror" required>
+                                @error('jurusan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

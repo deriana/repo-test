@@ -18,22 +18,27 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'sekolah_id' => 'nullable|exists:sekolah,id',
-            'jurusan_id' => 'nullable|exists:jurusan,id',
+        $validate = $request->validate([
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|string|email|max:255|unique:users',
+            'password'   => 'required|string|min:6|confirmed',
+            'sekolah'    => 'required|string|max:255',
+            'jurusan'    => 'required|string|max:255',
+        ]);
+
+        $sekolah = \App\Models\Sekolah::firstOrCreate(['nama' => $validate['sekolah']]);
+        $jurusan = \App\Models\Jurusan::firstOrCreate([
+            'nama'       => $validate['jurusan'],
+            'sekolah_id' => $sekolah->id,
         ]);
 
         $user = User::create([
-            'name'       => $request->name,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
-            'sekolah_id' => $request->sekolah_id,
-            'jurusan_id' => $request->jurusan_id,
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'sekolah_id' => $sekolah->id,
+            'jurusan_id' => $jurusan->id,
         ]);
-
 
         // ✅ Auto-login setelah register
         auth()->login($user);

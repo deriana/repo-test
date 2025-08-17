@@ -37,10 +37,10 @@
                     <a href="{{ route('classification.index') }}" class="nav-link"><i
                             class="fas fa-folder-tree"></i><span>Klasifikasi Surat</span></a>
                 </li>
-                <li class="nav-item {{ request()->routeIs('letter-status.*') ? 'active' : '' }}">
+                {{-- <li class="nav-item {{ request()->routeIs('letter-status.*') ? 'active' : '' }}">
                     <a href="{{ route('letter-status.index') }}" class="nav-link"><i
                             class="fas fa-envelope-open-text"></i><span>Status Surat</span></a>
-                </li>
+                </li> --}}
                 <li class="nav-item {{ request()->routeIs('agenda.incoming') ? 'active' : '' }}">
                     <a href="{{ route('agenda.incoming') }}" class="nav-link"><i
                             class="fas fa-folder-open"></i><span>Agenda Surat Masuk</span></a>
@@ -70,6 +70,10 @@
             </li>
 
             @if (auth()->user() && auth()->user()->role == 'admin')
+                {{-- <li class="nav-item {{ request()->routeIs('sekolah.*') ? 'active' : '' }}">
+                    <a href="{{ route('sekolah.index') }}" class="nav-link"><i class="fas fa-columns"></i><span>Sekolah
+                            </span></a>
+                </li> --}}
                 <li class="nav-item {{ request()->routeIs('rekap.*') ? 'active' : '' }}">
                     <a href="{{ route('rekap.index') }}" class="nav-link"><i class="fas fa-columns"></i><span>Rekap
                             Absensi</span></a>

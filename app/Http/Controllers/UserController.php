@@ -36,16 +36,21 @@ class UserController extends Controller
     // Simpan user baru
     public function store(Request $request)
     {
-        $request->validate([
+        $validate = $request->validate([
             'name'       => 'required',
             'email'      => 'required|email|unique:users,email',
             'password'   => 'required|min:8',
             'phone'      => 'nullable|string',
             'role'       => 'required|string',
-            'sekolah_id' => 'required|exists:sekolah,id',
-            'jurusan_id' => 'required|exists:jurusan,id',
+            'sekolah'    => 'required|string|max:255',
+            'jurusan'    => 'required|string|max:255',
             'image_url' => 'nullable|image|max:2048',
+        ]);
 
+        $sekolah = \App\Models\Sekolah::firstOrCreate(['nama' => $validate['sekolah']]);
+        $jurusan = \App\Models\Jurusan::firstOrCreate([
+            'nama'       => $validate['jurusan'],
+            'sekolah_id' => $sekolah->id,
         ]);
 
         $imagePath = null;
@@ -60,9 +65,9 @@ class UserController extends Controller
             'role'        => $request->role,
             'position'    => $request->position,
             'department'  => $request->department,
-            'image_url'   => $imagePath, // ✅ pakai path yang disimpan, bukan file langsung
-            'sekolah_id'  => $request->sekolah_id,
-            'jurusan_id'  => $request->jurusan_id,
+            'image_url'   => $imagePath,
+            'sekolah_id' => $sekolah->id,
+            'jurusan_id' => $jurusan->id,
             'password'    => Hash::make($request->password),
         ]);
 
@@ -80,24 +85,33 @@ class UserController extends Controller
     // Update user
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name'       => 'required',
+        $validate = $request->validate([
+            'name'       => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email,' . $user->id,
             'phone'      => 'nullable|string',
             'role'       => 'required|string',
-            'sekolah_id' => 'nullable|exists:sekolah,id',
-            'jurusan_id' => 'nullable|exists:jurusan,id',
-            'image_url' => 'nullable|image|max:2048',
+            'sekolah'    => 'required|string|max:255',
+            'jurusan'    => 'required|string|max:255',
+            'password'   => 'nullable|min:8',
+            'image_url'  => 'nullable|image|max:2048',
         ]);
 
-        $data = $request->only([
-            'name',
-            'email',
-            'phone',
-            'role',
-            'sekolah_id',
-            'jurusan_id'
+        // Cari atau buat sekolah & jurusan
+        $sekolah = \App\Models\Sekolah::firstOrCreate(['nama' => $validate['sekolah']]);
+        $jurusan = \App\Models\Jurusan::firstOrCreate([
+            'nama'       => $validate['jurusan'],
+            'sekolah_id' => $sekolah->id,
         ]);
+
+        // Siapkan data update
+        $data = [
+            'name'       => $validate['name'],
+            'email'      => $validate['email'],
+            'phone'      => $validate['phone'] ?? null,
+            'role'       => $validate['role'],
+            'sekolah_id' => $sekolah->id,
+            'jurusan_id' => $jurusan->id,
+        ];
 
         // Upload image jika ada
         if ($request->hasFile('image_url')) {
@@ -106,14 +120,16 @@ class UserController extends Controller
         }
 
         // Update password jika diisi
-        if ($request->filled('password')) {
+        if (!empty($request->password)) {
             $data['password'] = Hash::make($request->password);
         }
 
+        // Update user
         $user->update($data);
 
         return redirect()->route('users.index')->with('success', 'User berhasil diupdate.');
     }
+
 
 
     // Hapus user

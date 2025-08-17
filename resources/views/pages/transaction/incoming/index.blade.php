@@ -68,11 +68,11 @@
                                                                 <small class="d-block text-secondary">Tanggal Surat</small>
                                                                 {{ $letter->letter_date ? $letter->letter_date->format('d/m/Y') : '-' }}
                                                             </div>
-                                                            <a href="{{ route('transaction.disposition.index', $letter->id) }}"
+                                                            {{-- <a href="{{ route('transaction.disposition.index', $letter->id) }}"
                                                                 class="btn btn-sm btn-primary me-2 mr-3">
                                                                 <i class="fas fa-paper-plane"></i> Disposisi Surat
                                                                 ({{ $letter->dispositions->count() }})
-                                                            </a>
+                                                            </a> --}}
 
                                                             <div class="dropdown">
                                                                 <button class="btn p-0" type="button"
