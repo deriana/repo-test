@@ -38,6 +38,7 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
             'sekolah_id' => $sekolah->id,
             'jurusan_id' => $jurusan->id,
+            'role' => 'staff'
         ]);
 
         // ✅ Auto-login setelah register
